@@ -425,4 +425,4 @@ off  db "OFF",0
 ack  db "ACK  [OK]",0
 nack db "NACK [ERR]",0
 
-help db "[N] Send  [P] Corrupt  [D] Data  [B] Bit  [ESC] Exit",0
+help db "[N] Send  [P] Corrupt  [D] Data [ESC] Exit",0
