@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════╗
+║     TELEMETRY MONITOR - QUICK START GUIDE                    ║
+╚══════════════════════════════════════════════════════════════╝
+
+🚀 FASTEST WAY TO GET STARTED:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION A: Testing WITHOUT Assembly Code (Recommended First)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Install dependencies:
+   pip install Flask flask-cors
+
+2. Generate test data:
+   python test_generator.py
+   
+   Choose option [3] for auto-increment mode
+   This simulates your assembly programs!
+
+3. In a NEW terminal, start the server:
+   python server.py
+
+4. Open your browser:
+   http://localhost:5000
+
+✓ Done! You should see the telemetry monitor with live data!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION B: With Your Assembly Code
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Install dependencies:
+   pip install Flask flask-cors
+
+2. Run your assembly programs (in DOSBox or emulator):
+   
+   Terminal 1 (DOSBox):
+   > MASM sender.asm
+   > LINK sender.obj
+   > sender.exe
+   
+   Terminal 2 (DOSBox):
+   > MASM receiver.asm
+   > LINK receiver.obj
+   > receiver.exe
+
+3. Make sure TX.DAT and RX.DAT are in this directory
+   (or copy them here after running assembly programs)
+
+4. Start the server:
+   python server.py
+
+5. Open your browser:
+   http://localhost:5000
+
+6. In sender.asm window, press 'N' to send packets
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 FILES YOU NEED:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Essential:
+  ✓ server.py           - Backend server
+  ✓ requirements.txt    - Python packages
+  ✓ templates/index.html
+  ✓ static/style.css
+  ✓ static/script.js
+
+For testing:
+  ✓ test_generator.py   - Creates sample DAT files
+
+From your assembly:
+  ✓ TX.DAT             - Created by sender.asm
+  ✓ RX.DAT             - Created by receiver.asm
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎮 USING THE WEB INTERFACE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Buttons:
+  • Refresh Data - Manually update display
+  • Start Auto-Refresh - Update every 0.5 seconds
+
+Keyboard:
+  • Press R - Refresh
+  • Press Space - Toggle auto-refresh
+
+What you'll see:
+  • LEFT PANEL: Sender packet data
+  • RIGHT PANEL: Receiver validation
+  • Green border = Valid packet
+  • Red highlight = Corrupted bytes
+  • ACK/NACK status
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"Waiting for data..."
+→ TX.DAT file not found or empty
+→ Run test_generator.py OR your assembly sender
+
+"Connection error"
+→ Server not running
+→ Run: python server.py
+
+Port 5000 in use?
+→ Edit server.py, change port to 5001:
+   app.run(host='0.0.0.0', port=5001, debug=True)
+
+Can't install Flask?
+→ Try: pip3 install Flask flask-cors
+→ Or: python -m pip install Flask flask-cors
+
+Data not updating?
+→ Click "Start Auto-Refresh"
+→ Or press Spacebar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 NEED MORE HELP?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Read README.md for detailed documentation
+
+System Requirements:
+  • Python 3.8+
+  • Modern web browser (Chrome, Firefox, Edge)
+  • Your assembly programs OR test_generator.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 TIP: Start with test_generator.py first to verify 
+         everything works, then switch to your assembly code!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

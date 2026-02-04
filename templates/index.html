@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemetry Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title-bar">═══════ TELEMETRY MONITOR ═══════</div>
+            <div class="subtitle">Real-time Assembly Data Viewer | Reading from SENDER.JSON & RECEIVER.JSON</div>
+            <div class="status-line" id="statusLine">Last Update: <span id="lastUpdate">Never</span></div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+            <!-- Sender Panel -->
+            <div class="panel sender-panel">
+                <div class="panel-header">═══ SENDER PANEL ═══</div>
+                <div class="panel-divider"></div>
+                
+                <div class="section">
+                    <div class="section-title">PACKET FIELDS</div>
+                    <div class="field-row">
+                        <span class="field-label">Counter :</span>
+                        <span class="field-value" id="sender-counter">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Data Byte 1 :</span>
+                        <span class="field-value" id="sender-data1">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Data Byte 2 :</span>
+                        <span class="field-value" id="sender-data2">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Data Byte 3 :</span>
+                        <span class="field-value" id="sender-data3">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Checksum (TX) :</span>
+                        <span class="field-value" id="sender-checksum">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Parity (TX) :</span>
+                        <span class="field-value" id="sender-parity">--</span>
+                    </div>
+                </div>
+
+                <div class="panel-divider-thin"></div>
+
+                <div class="section">
+                    <div class="section-title">STATUS</div>
+                    <div class="field-row">
+                        <span class="field-label">Corruption :</span>
+                        <span class="field-value" id="sender-corruption">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Data Select :</span>
+                        <span class="field-value" id="sender-datasel">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Bit Select :</span>
+                        <span class="field-value" id="sender-bitsel">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Receiver Resp :</span>
+                        <span class="field-value response" id="sender-response">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receiver Panel -->
+            <div class="panel receiver-panel">
+                <div class="panel-header">═══ RECEIVER PANEL ═══</div>
+                <div class="panel-divider"></div>
+                
+                <div class="section">
+                    <div class="table-header">
+                        <span class="col-byte">BYTE</span>
+                        <span class="col-raw">RAW (RX)</span>
+                        <span class="col-expected">EXPECTED (CALC)</span>
+                    </div>
+                    <div class="panel-divider-thin"></div>
+                    
+                    <div class="data-row" id="rx-row-0">
+                        <span class="col-byte">[0]</span>
+                        <span class="col-raw">--</span>
+                        <span class="col-expected">--</span>
+                    </div>
+                    <div class="data-row" id="rx-row-1">
+                        <span class="col-byte">[1]</span>
+                        <span class="col-raw">--</span>
+                        <span class="col-expected">--</span>
+                    </div>
+                    <div class="data-row" id="rx-row-2">
+                        <span class="col-byte">[2]</span>
+                        <span class="col-raw">--</span>
+                        <span class="col-expected">--</span>
+                    </div>
+                    <div class="data-row" id="rx-row-3">
+                        <span class="col-byte">[3]</span>
+                        <span class="col-raw">--</span>
+                        <span class="col-expected">--</span>
+                    </div>
+                    <div class="data-row" id="rx-row-4">
+                        <span class="col-byte">[4]</span>
+                        <span class="col-raw">--</span>
+                        <span class="col-expected">--</span>
+                    </div>
+                    <div class="data-row" id="rx-row-5">
+                        <span class="col-byte">[5]</span>
+                        <span class="col-raw">--</span>
+                        <span class="col-expected">--</span>
+                    </div>
+                </div>
+
+                <div class="panel-divider-thin"></div>
+
+                <div class="section">
+                    <div class="field-row">
+                        <span class="field-label">Checksum CALC :</span>
+                        <span class="field-value" id="rx-checksum-calc">--</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Parity CALC :</span>
+                        <span class="field-value" id="rx-parity-calc">--</span>
+                    </div>
+                </div>
+
+                <div class="status-box" id="rxStatus">
+                    Waiting for data...
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="controls">
+            <button class="btn btn-primary" id="refreshBtn" onclick="fetchData()">
+                <span class="btn-icon">↻</span> Refresh Data
+            </button>
+            <button class="btn btn-success" id="autoRefreshBtn" onclick="toggleAutoRefresh()">
+                <span class="btn-icon">▶</span> Start Auto-Refresh
+            </button>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-dot"></span> Disconnected
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -5,7 +5,6 @@ start:
     mov ds, ax
 
     call clear
-    call init_rx_file
     call generate_packet
     call draw_ui
 
@@ -83,58 +82,22 @@ p3:
 
 ; ================= SEND PACKET =================
 send_packet:
-
-    ; ===== BACKUP CLEAN PACKET =====
-    mov si, packet
-    mov di, packet_backup
-    mov cx, 6
-bk1:
-    mov al, [si]
-    mov [di], al
-    inc si
-    inc di
-    loop bk1
-
-    ; ===== OPTIONAL CORRUPTION =====
     cmp byte [corrupt], 1
     jne no_err
 
     mov al, 1
     mov cl, [bit_sel]
     shl al, cl
-
     mov si, packet
     add si, [data_sel]
-    xor byte [si], al
-
-    mov byte [corrupt], 0
+    xor byte [si], al     ; REAL BIT FLIP
 
 no_err:
-
     call write_tx
     call read_rx
-
-    ; ===== RESTORE CLEAN PACKET AFTER SEND =====
-    mov si, packet_backup
-    mov di, packet
-    mov cx, 6
-rs1:
-    mov al, [si]
-    mov [di], al
-    inc si
-    inc di
-    loop rs1
-
-    ; ===== ONLY ADVANCE ON ACK =====
-    cmp byte [rx], 'A'
-    jne skip_new_packet
-
-    call generate_packet
-
-skip_new_packet:
     call draw_ui
+    call generate_packet
     jmp main_loop
-
 
 toggle_corrupt:
     xor byte [corrupt], 1
@@ -187,23 +150,6 @@ read_rx:
     mov ah, 3Fh
     mov cx, 1
     mov dx, rx
-    int 21h
-
-    mov ah, 3Eh
-    int 21h
-    ret
-
-; ================= INITIALIZE RX FILE =================
-init_rx_file:
-    mov ah, 3Ch
-    mov cx, 0
-    mov dx, rxfile
-    int 21h
-    mov bx, ax
-
-    mov ah, 40h
-    mov cx, 1
-    mov dx, ack_init
     int 21h
 
     mov ah, 3Eh
@@ -443,8 +389,7 @@ corrupt db 0
 data_sel db 1
 bit_sel db 0
 packet db 6 dup(0)
-rx db 'A'
-packet_backup db 6 dup(0)
+rx db 0
 
 txfile db "TX.DAT",0
 rxfile db "RX.DAT",0
@@ -479,6 +424,5 @@ on   db "ON",0
 off  db "OFF",0
 ack  db "ACK  [OK]",0
 nack db "NACK [ERR]",0
-ack_init db 'A'
 
 help db "[N] Send  [P] Corrupt  [D] Data  [B] Bit  [ESC] Exit",0
