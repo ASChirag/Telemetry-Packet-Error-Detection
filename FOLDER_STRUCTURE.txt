@@ -1,0 +1,515 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║           TELEMETRY MONITOR - COMPLETE FOLDER STRUCTURE              ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+📁 REQUIRED FOLDER STRUCTURE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+telemetry-monitor/                  👈 Your main project folder
+│
+├── server.py                       ⭐ Python Flask backend server
+├── requirements.txt                📋 Python dependencies list
+├── test_generator.py               🧪 Test data generator (optional)
+├── README.md                       📖 Full documentation
+├── QUICK_START.txt                 🚀 Quick reference guide
+│
+├── templates/                      📁 HTML templates folder (REQUIRED!)
+│   └── index.html                  🌐 Main web page
+│
+├── static/                         📁 Static files folder (REQUIRED!)
+│   ├── style.css                   🎨 Styling (retro green theme)
+│   └── script.js                   ⚙️  JavaScript logic
+│
+├── TX.DAT                          📊 Sender data (6 bytes)
+└── RX.DAT                          📊 Receiver response (1 byte)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 FILE DETAILS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. server.py (REQUIRED - Main Backend)
+   ├─ Language: Python 3
+   ├─ Framework: Flask
+   ├─ Purpose: Reads TX.DAT & RX.DAT, serves data via API
+   ├─ Port: 5000 (default)
+   └─ Endpoints:
+      • GET /              → Serves HTML page
+      • GET /api/data      → Returns telemetry JSON
+      • GET /api/status    → File existence check
+
+2. requirements.txt (REQUIRED)
+   ├─ Flask==3.0.0
+   └─ flask-cors==4.0.0
+   
+   Install with: pip install -r requirements.txt
+
+3. templates/index.html (REQUIRED)
+   ├─ The main web interface
+   ├─ Two-panel layout (Sender | Receiver)
+   ├─ Control buttons for refresh
+   └─ MUST be in "templates" folder (Flask requirement)
+
+4. static/style.css (REQUIRED)
+   ├─ Retro terminal styling
+   ├─ Green text (#00ff00) on black background
+   ├─ Animations for errors
+   └─ MUST be in "static" folder (Flask requirement)
+
+5. static/script.js (REQUIRED)
+   ├─ Handles data fetching from API
+   ├─ Updates UI in real-time
+   ├─ Auto-refresh functionality
+   └─ MUST be in "static" folder (Flask requirement)
+
+6. TX.DAT (Created by sender.asm OR test_generator.py)
+   ├─ Size: 6 bytes
+   ├─ Format:
+   │   Byte 0: Counter
+   │   Byte 1: Data 1 (Counter XOR 0x55)
+   │   Byte 2: Data 2 (Counter XOR 0xAA)
+   │   Byte 3: Data 3 (Counter + 3)
+   │   Byte 4: Checksum (Byte1 XOR Byte2 XOR Byte3)
+   │   Byte 5: Parity (even/odd bit count)
+   └─ Updated by: sender.asm writes this file
+
+7. RX.DAT (Created by receiver.asm)
+   ├─ Size: 1 byte
+   ├─ Values:
+   │   'A' (0x41) = ACK  - Packet valid
+   │   'N' (0x4E) = NACK - Packet corrupted
+   └─ Updated by: receiver.asm writes this file
+
+8. test_generator.py (OPTIONAL - For Testing)
+   ├─ Simulates assembly programs
+   ├─ Creates TX.DAT and RX.DAT
+   ├─ Useful for testing without DOSBox
+   └─ Modes:
+      • [1] Single valid packet
+      • [2] Single corrupted packet
+      • [3] Auto-increment (continuous)
+
+9. README.md (Documentation)
+   └─ Complete usage guide
+
+10. QUICK_START.txt (Quick Reference)
+    └─ Fast setup instructions
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  CRITICAL FOLDER NAMES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ WRONG:
+   myproject/
+   ├── template/           ❌ Missing 's'
+   │   └── index.html
+   └── server.py
+
+   myproject/
+   ├── Templates/          ❌ Capital 'T'
+   │   └── index.html
+   └── server.py
+
+✅ CORRECT:
+   myproject/
+   ├── templates/          ✅ Lowercase 'templates'
+   │   └── index.html
+   └── server.py
+
+
+Flask REQUIRES exact folder names:
+   • templates/  ← HTML files MUST be here
+   • static/     ← CSS/JS files MUST be here
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 SETUP STEPS (DETAILED):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: Create the folder structure
+────────────────────────────────────
+Windows:
+   mkdir telemetry-monitor
+   cd telemetry-monitor
+   mkdir templates
+   mkdir static
+
+Linux/Mac:
+   mkdir -p telemetry-monitor/{templates,static}
+   cd telemetry-monitor
+
+
+STEP 2: Place all files in correct locations
+────────────────────────────────────────────
+Copy files to:
+   telemetry-monitor/
+   ├── server.py              ← Root folder
+   ├── requirements.txt       ← Root folder
+   ├── test_generator.py      ← Root folder
+   ├── README.md              ← Root folder
+   ├── QUICK_START.txt        ← Root folder
+   ├── templates/
+   │   └── index.html         ← Inside templates/
+   └── static/
+       ├── style.css          ← Inside static/
+       └── script.js          ← Inside static/
+
+
+STEP 3: Install Python dependencies
+───────────────────────────────────
+Open terminal in telemetry-monitor folder:
+
+   pip install -r requirements.txt
+
+Or manually:
+   pip install Flask==3.0.0 flask-cors==4.0.0
+
+Check installation:
+   pip list | grep -i flask
+   (Should show Flask and flask-cors)
+
+
+STEP 4: Verify folder structure
+───────────────────────────────
+Run this command to check:
+
+Windows:
+   dir /s /b
+
+Linux/Mac:
+   find . -type f
+
+You should see:
+   ./server.py
+   ./requirements.txt
+   ./templates/index.html
+   ./static/style.css
+   ./static/script.js
+   (and other files)
+
+
+STEP 5: Test without assembly code first
+────────────────────────────────────────
+Terminal 1:
+   python test_generator.py
+   Choose: [3] Auto-increment mode
+
+Terminal 2:
+   python server.py
+
+Browser:
+   Open: http://localhost:5000
+
+
+STEP 6: Connect to your assembly code
+─────────────────────────────────────
+Option A - Copy DAT files:
+   1. Run sender.asm and receiver.asm in DOSBox
+   2. Find TX.DAT and RX.DAT files
+   3. Copy them to telemetry-monitor folder
+
+Option B - Run assembly in same folder:
+   1. Copy sender.asm and receiver.asm to telemetry-monitor
+   2. Run them in DOSBox with this folder as working directory
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌐 HOW IT WORKS (DATA FLOW):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────┐
+│  sender.asm     │  Press 'N' to send packet
+│  (DOSBox)       │
+└────────┬────────┘
+         │ writes
+         ↓
+    ┌────────────┐
+    │  TX.DAT    │  6 bytes: Counter, Data1-3, Checksum, Parity
+    └────┬───────┘
+         │ reads
+         ↓
+┌─────────────────┐
+│  receiver.asm   │  Validates packet
+│  (DOSBox)       │
+└────────┬────────┘
+         │ writes
+         ↓
+    ┌────────────┐
+    │  RX.DAT    │  1 byte: 'A' (ACK) or 'N' (NACK)
+    └────┬───────┘
+         │ reads
+         ↓
+┌─────────────────┐
+│  sender.asm     │  Shows ACK/NACK
+└─────────────────┘
+
+         ↕ Both files are read by ↕
+
+┌─────────────────┐
+│  server.py      │  Python Flask server reads both files
+│  (Python)       │  Provides JSON API at /api/data
+└────────┬────────┘
+         │ HTTP
+         ↓
+┌─────────────────┐
+│  Browser        │  Displays data in real-time
+│  localhost:5000 │  Auto-refreshes every 0.5 seconds
+└─────────────────┘
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 PORT CONFIGURATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Default Port: 5000
+Access URL: http://localhost:5000
+
+To change port (if 5000 is in use):
+
+1. Open server.py
+2. Find last line: app.run(host='0.0.0.0', port=5000, debug=True)
+3. Change to: app.run(host='0.0.0.0', port=8080, debug=True)
+4. Save and restart server
+5. Access at: http://localhost:8080
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌍 NETWORK ACCESS (Access from other devices):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+server.py already configured with: host='0.0.0.0'
+This allows access from other devices on your network!
+
+To access from another computer:
+
+1. Find your computer's IP address:
+   
+   Windows:
+      ipconfig
+      (Look for IPv4 Address under your network adapter)
+   
+   Linux/Mac:
+      ifconfig
+      (Look for inet under your network interface)
+
+2. On other device's browser, go to:
+   http://YOUR_IP_ADDRESS:5000
+   
+   Example: http://192.168.1.100:5000
+
+3. Make sure firewall allows port 5000!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚙️  AUTO-REFRESH CONFIGURATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Default: Updates every 500ms (0.5 seconds)
+
+To change refresh rate:
+
+1. Open: static/script.js
+2. Find line: autoRefreshInterval = setInterval(fetchData, 500);
+3. Change 500 to your desired milliseconds:
+   • 100 = very fast (10 times per second)
+   • 500 = default (2 times per second)
+   • 1000 = slower (once per second)
+   • 2000 = slow (once every 2 seconds)
+4. Save and refresh browser (Ctrl+F5)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 CUSTOMIZATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Colors (static/style.css):
+─────────────────────────
+body {
+    color: #00ff00;        /* Main text - green */
+    background: #000000;   /* Background - black */
+}
+
+.title-bar {
+    color: #00ffff;        /* Title - cyan */
+}
+
+Change to amber theme:
+   #00ff00 → #ffb000  (green to amber)
+
+
+Text Size (static/style.css):
+────────────────────────────
+body {
+    font-size: 14px;       /* Increase for larger text */
+}
+
+
+Panel Width (static/style.css):
+──────────────────────────────
+.main-grid {
+    grid-template-columns: 1fr 1fr;  /* Equal width */
+    /* Change to: 2fr 3fr for different widths */
+}
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🐛 COMMON ISSUES & SOLUTIONS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Issue: "ModuleNotFoundError: No module named 'flask'"
+Solution: pip install Flask flask-cors
+
+Issue: "TemplateNotFound: index.html"
+Solution: Ensure templates/ folder exists and contains index.html
+
+Issue: "404 Not Found" for CSS/JS
+Solution: Ensure static/ folder exists with style.css and script.js
+
+Issue: "Waiting for data..." forever
+Solution: 
+   • TX.DAT doesn't exist
+   • Run test_generator.py OR your assembly programs
+   • Check TX.DAT is in same folder as server.py
+
+Issue: "Address already in use"
+Solution: 
+   • Port 5000 is taken
+   • Change port in server.py (line with app.run)
+   • Or stop other program using port 5000
+
+Issue: Page shows but no styling
+Solution:
+   • Clear browser cache (Ctrl+Shift+R or Cmd+Shift+R)
+   • Check browser console (F12) for errors
+   • Verify static/style.css exists
+
+Issue: Data not updating
+Solution:
+   • Click "Start Auto-Refresh" button
+   • Or press Spacebar to toggle auto-refresh
+
+Issue: "Permission denied" on Linux/Mac
+Solution: chmod +x server.py test_generator.py
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 PYTHON VERSION REQUIREMENTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Minimum: Python 3.8
+Recommended: Python 3.10 or higher
+
+Check your version:
+   python --version
+   or
+   python3 --version
+
+If too old, download from: https://www.python.org/downloads/
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 PRODUCTION DEPLOYMENT (Optional):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For development: python server.py
+For production: Use gunicorn or waitress
+
+Install gunicorn:
+   pip install gunicorn
+
+Run with gunicorn:
+   gunicorn -w 4 -b 0.0.0.0:5000 server:app
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 QUICK COMMAND REFERENCE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Test with sample data (continuous mode)
+python test_generator.py
+
+# Start server
+python server.py
+
+# Check if files exist
+ls -la TX.DAT RX.DAT    (Linux/Mac)
+dir TX.DAT RX.DAT       (Windows)
+
+# View DAT files in hex
+hexdump -C TX.DAT       (Linux/Mac)
+format-hex TX.DAT       (Windows PowerShell)
+
+# Stop server
+Ctrl+C
+
+# Stop test generator
+Ctrl+C
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ VERIFICATION CHECKLIST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Before running, verify:
+
+□ Python 3.8+ installed (python --version)
+□ Flask installed (pip list | grep -i flask)
+□ Folder structure is correct:
+  □ templates/ folder exists
+  □ static/ folder exists
+  □ index.html is in templates/
+  □ style.css is in static/
+  □ script.js is in static/
+□ server.py is in root folder
+□ TX.DAT exists (or test_generator.py ready)
+□ Port 5000 is available
+
+If all checked, you're ready! Run: python server.py
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎓 LEARNING RESOURCES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Flask Documentation: https://flask.palletsprojects.com/
+Python File I/O: https://docs.python.org/3/tutorial/inputoutput.html
+HTML/CSS/JS: https://developer.mozilla.org/
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 TIPS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Always test with test_generator.py first before using assembly code
+2. Keep Terminal/Command Prompt open to see server logs
+3. Use browser DevTools (F12) to debug JavaScript issues
+4. TX.DAT and RX.DAT must be in same folder as server.py
+5. Press Ctrl+C to stop server cleanly
+6. Clear browser cache if styling doesn't update
+7. Use "Start Auto-Refresh" for continuous monitoring
+8. Firewall may block port 5000 - allow it if needed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Need more help? Check README.md for detailed documentation!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
